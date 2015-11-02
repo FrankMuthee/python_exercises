@@ -1,7 +1,7 @@
 #Muthee Francis
 #project 1
 #hangman.py
-# Oct 19, 2015
+# Oct 19, 2011
 
 from time import sleep
 import random
@@ -9,8 +9,108 @@ import string
 
 WORDLIST_FILENAME = "words.txt"
 
+hangman_pics = ['''
+
+   +---+
+
+   |   |
+
+       |
+
+       |
+
+       |
+
+       |
+
+ =========''', '''
+
+    +---+
+
+    |   |
+
+    O   |
+
+        |
+
+        |
+
+        |
+
+  =========''', '''
+
+     +---+
+
+     |   |
+
+     O   |
+
+     |   |
+
+         |
+
+         |
+
+   =========''', '''
+
+   +---+
+
+      |   |
+
+      O   |
+
+     /|   |
+
+          |
+
+          |
+
+    =========''', '''
+    
+       +---+
+
+       |   |
+
+       O   |
+
+      /|\  |
+
+           |
+
+           |
+
+     =========''', '''
+     
+        +---+
+
+        |   |
+
+        O   |
+
+       /|\  |
+
+       /    |
+
+            |
+
+      =========''', '''
+
+         +---+
+
+         |   |
+
+         O   |
+
+        /|\  |
+
+        / \  |
+
+             |
+
+       =========''']
+
 def loadWords():
-    print "\n Loading words from the file file ........."
+    print "\n Loading words from the file ........."
     sleep(2)
     # inFile: file
     inFile = open(WORDLIST_FILENAME, 'r', 0)
@@ -34,6 +134,7 @@ def isWordGuessed(secretWord, lettersGuessed):
     return True
 
 def getGuessedWord(secretWord, lettersGuessed):
+    global hangman_pics
     string = ""
     for i in secretWord:
         if i in lettersGuessed:
@@ -42,17 +143,6 @@ def getGuessedWord(secretWord, lettersGuessed):
             string += '_ '
     return string
 
-def getAvailableLetters(lettersGuessed):
-    # fill notGuessed with alphabet a - z
-    notGuessed = []
-    for i in range(26):
-        notGuessed += chr(i + ord('a'))
-    for j in lettersGuessed:
-        notGuessed.remove(j)
-    string = ''
-    for k in notGuessed:
-        string += k 
-    return string
 
 def repeat_game(user_choice):
     while True:
@@ -61,12 +151,13 @@ def repeat_game(user_choice):
         else:
             break
 
-def play_hangman(secretWord): 
+def play_hangman(secretWord):
+    global hangman_pics
     print("\n WELCOME TO THE GAME OF HANGMAN !!! ")
     print("\n [ Guess a word that is ( " + str(len(secretWord)) +" ) letters long ]")
     lettersGuessed = []
-    guesses = 8
-
+    guesses = 7
+    hangman_index = 0
     # while all the letters of secretWord are not yet in lettersGuessed and guesses left is more than 0
     while not isWordGuessed(secretWord, lettersGuessed) and guesses > 0:
         print("\n You have " + str(guesses) +" guesses left")
@@ -95,9 +186,11 @@ def play_hangman(secretWord):
         # else the guess letter is not in secret word
         else:
             print("\n You guessed incorrectly: " + getGuessedWord(secretWord, lettersGuessed))
+            print hangman_pics[hangman_index]
+            hangman_index +=1
             guesses -= 1
         # if ran out of guesses
-
+        
         if guesses == 0:
             sleep(2)
             print("\n [ GAME OVER !!! YOU LOSE !!! THE HANGMAN GOT YOU !!! The word was " + secretWord + " ] ")
